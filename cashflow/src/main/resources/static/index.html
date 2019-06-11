@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+</head>
+<body>
+<div id="main" style="width: 1200px;height:800px;"></div>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+
+        myChart.showLoading();
+        $.getJSON('http://localhost:8080/group/list/20180801085621-253', function (json) {
+        	myChart.hideLoading();
+            console.log(json);
+            myChart.setOption(option = {
+                    title: {
+                        text: 'NPM Dependencies'
+                    },
+                    animationDurationUpdate: 1500,
+                    animationEasingUpdate: 'quinticInOut',
+                    series : [
+                        {
+                            type: 'graph',
+                            layout: 'none',
+                            // progressiveThreshold: 700,
+                            data: json.map(function (node) {
+                                return {
+                                    x: node.x,
+                                    y: node.y,
+                                    id: node.id,
+                                    name: node.name,
+                                    symbolSize: 10,
+                                    itemStyle: {
+                                        normal: {
+                                            color: "red"
+                                        }
+                                    }
+                                };
+                            }),
+                           
+                            label: {
+                                emphasis: {
+                                    position: 'right',
+                                    show: true
+                                }
+                            },
+                            roam: true,
+                            focusNodeAdjacency: true,
+                            lineStyle: {
+                                normal: {
+                                    width: 0.5,
+                                    curveness: 0.3,
+                                    opacity: 0.7
+                                }
+                            }
+                        }
+                    ]
+                }, true);
+        });
+    </script>
+</body>
+</html>
